@@ -1,0 +1,27 @@
+
+			clr		  R6          ;zera meu contador
+			mov		  #19,R6      ;meu contador recebe valor 19 para fazer 20 operações 
+ 			mov		  #1,R7       ;coloco 1 em R7
+ 			mov		  #2,R8       ;coloco 2 em R8
+ 			mov.w	  #vetor,R5   ;coloco um vetor de 16bits em R5
+ 			call	  #fibo       ;chamo minha subrotina
+			NOP               ;paro o programa
+			JMP		  $
+			NOP
+
+fibo:	mov.w	  R7,0(R5)    ;Coloco o valor de R7 no vetor R5
+ 			inc		  R5          ;passo para os proximos bits do vetor
+ 			inc		  R5
+ 			mov.w 	R8,0(R5)    ;coloco o valor de R8 no vetor R5 (agora ele vai ter uma posicao a frente pois incrementei antes)
+ 			mov		  R7,R9       ;começo agora a logica do fibonacci
+ 			add		  R8,R9
+ 			mov		  R8,R7
+ 			mov		  R9,R8
+ 			dec		  R6          ;decremento meu contador
+ 			jnz		  fibo        ;enquanto meu contador nao zerar, repito minha subrotina
+
+ 			ret                 ;retorno
+
+
+    		     .data
+vetor:		   .word	20    ;meu vetor possui 20, duvida: deveria ser 10?
