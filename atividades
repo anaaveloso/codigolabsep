@@ -1,4 +1,10 @@
+;ATIVIDADE 1
 
+;ATIVIDADE 2
+
+;ATIVIDADE 3
+
+;ATIVIDADE 7
 			clr		  R6          ;zera meu contador
 			mov		  #19,R6      ;meu contador recebe valor 19 para fazer 20 operações 
  			mov		  #1,R7       ;coloco 1 em R7
