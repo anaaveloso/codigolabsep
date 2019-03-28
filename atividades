@@ -31,3 +31,36 @@ fibo:	mov.w	  R7,0(R5)    ;Coloco o valor de R7 no vetor R5
 
     		     .data
 vetor:		   .word	20    ;meu vetor possui 20, duvida: deveria ser 10?
+
+
+PROJETO 
+mov.b	#vetor,R5
+			mov.b	@R5,R6		;contador da varredura
+			mov.b	@R5,R9		;contador das trocas
+			dec		R6
+			dec		R9
+			call	#ordena
+			jmp		$
+			nop
+
+ordena:		inc		R5
+			mov.b	@R5,R7
+			inc		R5
+			mov.b	@R5,R8
+			cmp.b	R7,R8
+			jlo		ord
+			jhs		ordena
+
+
+ord:		mov.b	R8,-1(R5)
+			mov.b	R7,0(R5)
+			dec		R5
+			dec		R9
+			jnz		ordena
+
+
+			ret
+
+			.data
+vetor:		.byte	7,	"NAALUMA"
+                                     
