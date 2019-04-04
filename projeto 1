@@ -1,0 +1,42 @@
+mov		#vetor,R5
+			mov.b	@R5,R4		;contador da varredura
+			dec		R4
+			mov.b	@R5,R12		;contador de reiniciar a varredura
+			dec		R12
+			inc 	R5
+			call	#ordena
+			jmp		$
+			nop
+
+ordena:
+			mov.b	@R5,R6
+			inc		R5
+			mov.b	@R5,R7
+			cmp.b	R6,R7
+			jhs		sim
+			jlo		nao
+
+sim:
+			mov.b	R6,R10
+			mov.b	R7,R11
+			jmp		continua		;isso faz pular a label "nao"?
+nao:
+			mov.b	R6,R11
+			mov.b	R7,R10
+
+continua:	mov.b	R10,-1(R5)		;tem que conferir se ele só copia o valor ou se ele move o cursor do vetor, se mover tem que decrementar o R5
+			mov.b	R11,0(R5)
+			dec		R4
+			jnz		ordena
+			mov		#vetor,R5			;testar R3
+			inc		R5
+			dec		R12
+			mov.b	R12,R4
+			jnz		ordena		;ele consegue interpretar se enquanto nao for zero R12? ou R4?
+
+			ret
+
+
+
+			.data
+vetor:		.byte	7,	"ANALUMA"
