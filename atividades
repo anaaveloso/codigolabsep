@@ -26,26 +26,26 @@ VETOR:			.byte	7,"ANALUMA"
 
 ;ATIVIDADE 2
 
+			 MOV	#VETOR,R5
+             		CALL	#MAIOR
+            		 JMP	$
 
-			MOV	#VETOR,R5
-			CALL	#MENOR
-			JMP	$
+MAIOR:			MOV	@R5,R8
+ 			CLR	R6
+LB1:			INCD	R5
+ 			CMP	@R5,R6
+ 			JEQ	LB3
+ 			JLO	LB2
+ 			DEC	R8
+ 			JNZ	LB1
+ 			RET
+LB2:			MOV	@R5,R6
+			CLR	R7
+LB3:			INC	R7
+			DEC	R8
+			JNZ	LB1
+			RET
 
-MENOR:			MOV.B	@R5,R8
-			MOV.B	#255,R6
-LB3:			INC	R5
-			CMP.B	@R5,R6
-			JEQ	LB1
-			JHS	LB2
-			DEC.B	R8
-			JNZ	LB3
-			RET
-LB2:			MOV.B	@R5,R6
-			CLR.B	R7
-LB1:			INC.B	R7
-			DEC.B	R8
-			JNZ	LB3
-			RET
 
 				.data
 VETOR:			.byte	7,"ANALUMA"
@@ -84,6 +84,45 @@ LB3:			RET
 			.data
 VETOR:		.byte	7,"ANALUMA"
 
+
+;ATIVIDADE 4
+		
+			MOV		#VETOR,R5
+			CALL		#EXTREMOS
+			JMP		$
+
+EXTREMOS:		MOV		#32767,R6
+			MOV		#-32768,R7 ;como representar um numero negativo?
+			MOV		@R5,R8
+LB2:			INCD		R5
+			DEC		R8
+			JZ		LB3
+			CMP		@R5,R6
+			JL		LB1
+			MOV		@R5,R6
+			CMP		@R5,R7
+			JGE		LB1
+			MOV		@R5,R7
+			JNZ		LB2
+LB1:			CMP		@R5,R7
+			JGE		LB2
+			MOV		@R5,R7
+			JNZ		LB2
+LB3:			CMP		@R5,R6
+			JL		LB4
+			MOV		@R5,R6
+LB4:			CMP		@R5,R7
+			JGE		LB5
+			MOV		@R5,R7
+LB5:			RET
+
+
+			.data
+VETOR:		.word	8,140,129,341,-1997,150,251,879,-1997
+
+
+		
+
 ;ATIVIDADE 5
 
 
@@ -111,82 +150,70 @@ VETORS:			.word	7,0,0,0,0,0,0,0
 
 ;ATIVIDADE 6
 
+              	MOV		#VETOR1,R5
+              	MOV		#VETOR2,R6
+              	MOV		#VETORS,R4
+              	CALL		#SUM_TOT
+              	JMP		$
 
+SUM_TOT:	MOV		@R5,R9
+		CLR		R7
+		CLR		R8
+LB1:		INCD		R5
+		INCD		R6
+		INCD		R4
+		MOV		@R6,0(R4)
+		ADD		@R5,0(R4)
+		DEC		R9
+		JNZ		LB1
+		MOV		#VETORS,R4
+		MOV		@R4,R11
+LB3:		INCD		R4
+		ADD		@R4,R7
+		ADC		R8
+		DEC		R11
+		JNZ		LB3
+		RET
+
+				.data
+VETOR1:			.word	7,2021,2223,2425,2627,2829,3031,3233
+VETOR2:			.word	7,6867,6665,6463,6261,6059,5857,5655
+VETORS:			.word	7,0,0,0,0,0,0,0
 
 ;ATIVIDADE 7
------------------
------------------
-			clr		  R6          ;zera meu contador
-			mov		  #19,R6      ;meu contador recebe valor 19 para fazer 20 operações 
- 			mov		  #1,R7       ;coloco 1 em R7
-@@ -35,12 +139,8 @@ fibo:	mov.w	  R7,0(R5)    ;Coloco o valor de R7 no vetor R5
-    		     .data
-vetor:		   .word	20    ;meu vetor possui 20, duvida: deveria ser 10?
 
------------------
------------------
-PROJETO 
------------------
------------------
+				CALL	#FIB
+				JMP	$
 
-PROJETO 
-mov.b	#vetor,R5
-			mov.b	@R5,R6		;contador da varredura
-			mov.b	@R5,R9		;contador das trocas
-@@ -70,56 +170,4 @@ ord:		mov.b	R8,-1(R5)
+FIB:				MOV	#0X2400,R5
+				MOV	#40,0(R5)
+				MOV	@R5,R8
+				INCD	R5
+				MOV	#0,0(R5)
+				INCD	R5
+				MOV	#1,0(R5)
+				DECD	R8
+				DECD	R8
+LB1:				MOV	@R5,R7
+				ADD	-1(R5),R7
+				INCD	R5
+				MOV	R7,0(R5)
+				DECD	R8
+				JNZ	LB1
+				RET
+				
+				
+				
+;ATIVIDADE 8
 
-			.data
-vetor:		.byte	7,	"NAALUMA"
 
-----------------------
-----------------------
-Projeto 1 versao 2:
-----------------------
-----------------------
 
-			mov.b	#vetor,R5
-			mov.b	@R5,R4		;contador da varredura
-			mov.b	@R5,R12		;contador de reiniciar a varredura
-			inc 	R5
-			call	#ordena
-			jmp		$
-			nop
 
-ordena:	
-			mov.b	@R5,R6
-			inc		R5
-			mov.b	@R5,R7
-			cmp.b	R6,R7
-			jlo		sim
-			jhs		nao
 
-sim:		
-			mov.b	R6,R10
-			mov.b	R7,R11
-			jmp		continua		;isso faz pular a label "nao"?
-nao:		
-			mov.b	R6,R11
-			mov.b	R7,R10
 
-continua:	mov.b	R10,-1(R5)		;tem que conferir se ele só copia o valor ou se ele move o cursor do vetor, se mover tem que decrementar o R5
-			mov.b	R11,0(R5)
-			dec		R4
-			jnz		ordena
-			dec		R12
-			mov.b	R12,R4
-			call	ord
-			mob.b	R12,R4
-			jnz		ordena		;ele consegue interpretar se enquanto nao for zero R12? ou R4?
-			ret
 
-ord:		dec		R5
-			dec		R4
-			jnz		ord
-			ret
 
-			.data
-vetor:		.byte	7,	"NAALUMA"
-;ATIVIDADE 7
+
 -----------------
 -----------------
 			clr		  R6          ;zera meu contador
@@ -214,92 +241,7 @@ fibo:	mov.w	  R7,0(R5)    ;Coloco o valor de R7 no vetor R5
 
 
     		     .data
-vetor:		   .word	20    ;meu vetor possui 20, duvida: deveria ser 10?
-
------------------
------------------
-PROJETO 
------------------
------------------
-
-mov.b	#vetor,R5
-			mov.b	@R5,R6		;contador da varredura
-			mov.b	@R5,R9		;contador das trocas
-			dec		R6
-			dec		R9
-			call	#ordena
-			jmp		$
-			nop
-
-ordena:		inc		R5
-			mov.b	@R5,R7
-			inc		R5
-			mov.b	@R5,R8
-			cmp.b	R7,R8
-			jlo		ord
-			jhs		ordena
-
-
-ord:		mov.b	R8,-1(R5)
-			mov.b	R7,0(R5)
-			dec		R5
-			dec		R9
-			jnz		ordena
-
-
-			ret
-
-			.data
-vetor:		.byte	7,	"NAALUMA"
-
-----------------------
-----------------------
-Projeto 1 versao 2:
-----------------------
-----------------------
-
-			mov.b	#vetor,R5
-			mov.b	@R5,R4		;contador da varredura
-			mov.b	@R5,R12		;contador de reiniciar a varredura
-			inc 	R5
-			call	#ordena
-			jmp		$
-			nop
-
-ordena:	
-			mov.b	@R5,R6
-			inc		R5
-			mov.b	@R5,R7
-			cmp.b	R6,R7
-			jlo		sim
-			jhs		nao
-
-sim:		
-			mov.b	R6,R10
-			mov.b	R7,R11
-			jmp		continua		;isso faz pular a label "nao"?
-nao:		
-			mov.b	R6,R11
-			mov.b	R7,R10
-			
-continua:	mov.b	R10,-1(R5)		;tem que conferir se ele só copia o valor ou se ele move o cursor do vetor, se mover tem que decrementar o R5
-			mov.b	R11,0(R5)
-			dec		R4
-			jnz		ordena
-			dec		R12
-			mov.b	R12,R4
-			call	ord
-			mob.b	R12,R4
-			jnz		ordena		;ele consegue interpretar se enquanto nao for zero R12? ou R4?
-			ret
-
-ord:		dec		R5
-			dec		R4
-			jnz		ord
-			ret
-
-			.data
-vetor:		.byte	7,	"NAALUMA"
+vetor:		   .word	20    ;meu vetor possui 20, duvida: deveria ser 10? SIM
 
 
 
