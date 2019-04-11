@@ -1,0 +1,43 @@
+
+      mov     #vetor,R5      ;inicializando o vetor
+			call	#ordena        ;chamando a subrotina ordena
+			jmp	$	       		   ;travando o programa
+			nop
+
+ordena:     mov.b	@R5,R4			;contador da varredura R4
+			dec		R4				;o contador é decrementado, tendo em vista que a última posição da varredura já será fixada pelo maior numero
+			mov.b	@R5,R12			;contador de reiniciar a varredura R12
+			dec		R12				;o contador é decrementado, pois a reinicialização do vetor só será contada depois da primeira varrida
+			inc 	R5				;próximo endereço do vetor R5
+lb1:		mov.b	@R5,R6			;movendo o endereço atual de R5 para R6
+			inc		R5              ;próximo endereço do vetor R5
+			mov.b	@R5,R7			;movendo endereço atual de R5 para R7
+			cmp.b	R6,R7			;comparando as duas posições do vetor R5 que foram movidas para R6 e R7
+			jhs		sim				;se R7 for maior que R6, pulamos para o label sim
+			jlo		nao				;se R7 for menor que R6, pulamos para o label nao
+
+sim:
+			mov.b	R6,R10			;R10 guarda o menor numero (R6)
+			mov.b	R7,R11			;R11 guarda o maior numero (R7)
+			jmp		continua		;pula para o label continua
+nao:
+			mov.b	R6,R11			;R11 guarda o maior numero (R6)
+			mov.b	R7,R10			;R10 guarda o menor numero (R7)
+
+continua:	mov.b	R10,-1(R5)		;movendo o menor valor para a posição anterior ao que o ponteiro se encontra
+			mov.b	R11,0(R5)		;movendo o maior valor para a posição atual de R5
+			dec		R4				;contador da varredura decrementado
+			jnz		lb1				;repetindo a operação até que se varra todo o vetor
+			mov		#vetor,R5		;voltando para a posição inicial de R5 (tamanho do vetor)
+			inc		R5				;indo para o primeiro elemento do vetor
+			dec		R12				;contador de reinicialização de varredura decrementado
+			mov.b	R12,R4			;fazendo com que o contador de varredura seja igual ao contador de reinicialização de varredura
+			jnz		lb1				;enquanto não terminar toda a varredura de reinicialização, continua-se o label lb1
+
+			ret						;saindo da subrotina
+
+
+
+			.data
+vetor:		.byte	7,	"ANALUMA"
+
